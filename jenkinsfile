@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository...'
+                git branch: 'main', url: 'https://github.com/aswinr-24/mypipelinenewebsite.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Running build steps...'
+                // For a static site, there's nothing to compile, so we just echo.
+            }
+        }
+
+        stage('Deploy to XAMPP') {
+            steps {
+                echo 'Copying files to XAMPP htdocs...'
+                bat 'xcopy /Y /E "%WORKSPACE%\\*" "C:\\xampp\\htdocs\\mypipeline\\"'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful! Visit http://localhost/mypipeline to view your site.'
+        }
+        failure {
+            echo 'Build failed! Check logs for issues.'
+        }
+    }
+}
